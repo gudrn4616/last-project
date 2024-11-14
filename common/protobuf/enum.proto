@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package Protocol;
+
+enum ObjectType
+{
+	PLAYER = 0;
+	MONSTER =1;
+	PROJECTILE = 2;
+}
