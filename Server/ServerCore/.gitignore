@@ -1,10 +1,7 @@
 # compiled output
 /dist
 
-/Client/node_modules
-/Server/ServerCore/node_modules
-/Server/LobbyServer/node_modules
-/Server/BattleServer/node_modules
+node_modules/
 
 # Logs
 logs
