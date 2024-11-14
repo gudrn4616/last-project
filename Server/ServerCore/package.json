@@ -1,0 +1,21 @@
+{
+  "name": "servercore",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "protoc": "cd ../.. && npx buf generate ./common/protobuf"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@bufbuild/buf": "^1.46.0",
+    "@bufbuild/protoc-gen-es": "^2.2.2"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.2.2"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./", // 현재 경로를 기준으로 설정
+    "paths": {
+      "ServerCore/*": ["../ServerCore/*"]
+    }
+  },
+  "include": ["src", "../ServerCore/**/*"],
+  "exclude": ["node_modules"]
+}
