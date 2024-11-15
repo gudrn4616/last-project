@@ -20,7 +20,7 @@ const connectRedis = async () => {
 await connectRedis();
 
 export const redisManager = {
-  serCache: async (key, value, expiration = 3600) => {
+  setCache: async (key, value, expiration = 3600) => {
     try {
       await redisClient.set(key, JSON.stringify(value), 'EX', expiration);
       console.log(`캐시 설정 완료: ${key}`);

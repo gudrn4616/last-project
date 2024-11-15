@@ -15,3 +15,13 @@ export const findUserByEmail = async (email) => {
     console.error(e);
   }
 };
+
+export const findUserByNickname = async(nickname)=>{
+  try{
+    const [row] = await pools.USER_DB.query(SQL_QUERIES.FIND_USER_BY_NICKNAME,[nickname]);
+    return rows[0];
+  }
+  catch(e){
+    console.error(e);
+  }
+}

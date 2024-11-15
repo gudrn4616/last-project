@@ -8,7 +8,6 @@ import {
   HOST,
   PORT,
   REDIS_URL,
-  REDIS_PORT,
 } from '../constants/env.js';
 
 export const config = {
