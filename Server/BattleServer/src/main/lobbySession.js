@@ -4,7 +4,8 @@ import { battleConfig } from "../config/config.js";
 import { create } from "@bufbuild/protobuf";
 import { handleError } from "../utils/error/errorHandler.js";
 import { CustomError } from "ServerCore/src/utils/error/customError.js";
-
+import { B2L_InitialPacketSchema } from "../protocol/server_pb.js";
+import { ePacketId } from "../../../ServerCore/src/network/packetId.js";
 
 export class LobbySession extends Session {
   constructor(socket) {
@@ -40,10 +41,10 @@ export class LobbySession extends Session {
     throw new Error('Method not implemented.');
   }
 
-/**---------------------------------------------
-   * [소켓 에러 처리]
-   * @param {Error} error - 발생한 에러
-   ---------------------------------------------*/
+  /**---------------------------------------------
+     * [소켓 에러 처리]
+     * @param {Error} error - 발생한 에러
+     ---------------------------------------------*/
   onError(error) {
     console.error('소켓 오류:', error);
     handleError(this, new CustomError(500, `소켓 오류: ${error.message}`));

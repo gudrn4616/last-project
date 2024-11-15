@@ -1,4 +1,5 @@
-
+import { config } from "../config/config.js";
+import { create, fromBinary, toBinary } from '@bufbuild/protobuf';
 export class PacketUtils {
   /*---------------------------------------------
     [헤더 파싱]
@@ -42,3 +43,4 @@ export class PacketUtils {
     return sendBuffer;
   }
 }
+

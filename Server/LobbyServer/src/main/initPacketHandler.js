@@ -1,5 +1,13 @@
 import { Socket } from 'net';
-
+import { config } from "../../../ServerCore/src/config/config.js";
+import { PacketUtils } from "../../../ServerCore/src/utils/packetUtils.js";
+import { C2L_InitialPacketSchema } from "../protocol/client_pb.js";
+import { B2L_InitialPacketSchema, L2C_InitSchema } from "../protocol/server_pb.js";
+import { ePacketId } from "../../../ServerCore/src/network/packetId.js";
+import { ErrorCodes } from "../../../ServerCore/src/utils/error/errorCodes.js";
+import { ResponseUtils } from "../../../BattleServer/src/utils/responseUtils.js";
+import { UserDb } from "../db/user.db.js";
+import { CustomError } from "../../../ServerCore/src/utils/error/customError.js";
 export const onConnection = (socket) => {
   console.log('새로운 연결이 감지되었습니다:', socket.remoteAddress, socket.remotePort);
 
@@ -38,7 +46,7 @@ export const onConnection = (socket) => {
 ---------------------------------------------*/
 const initialHandler = async (buffer, socket, packetId) => {
   console.log('initialHandler: called');
-  socket.removeAllListeners('data'); 
+  socket.removeAllListeners('data');
 
   if (packetId === ePacketId.C2L_Init) {
     let packet;
