@@ -9,13 +9,12 @@ const handlerMappings = {
     roomManager.createRoomHandler(buffer, session),
   [ePacketId.C2L_EnterRoom]: (buffer, session) =>
     roomManager.enterRoomHandler(buffer, session),
-
+  [ePacketId.C2L_RandomEnterRoom]:(buffer,session)=>
+    roomManager.randomEnterRoomHandler(buffer,session),
   [ePacketId.C2L_LeaveRoom]: (buffer, session) =>
     roomManager.enterRoomHandler(buffer, session),
-
   [ePacketId.C2L_GetRooms]: (buffer, session) =>
     roomManager.getRoomsHandler(buffer, session),
-
   [ePacketId.C2L_GameStart]: (buffer, session) =>
     roomManager.gameStartHandler(buffer, session),
 
