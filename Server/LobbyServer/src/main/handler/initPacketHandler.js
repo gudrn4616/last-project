@@ -29,15 +29,19 @@ export const onConnection = (socket) => {
 
     const packet = buffer.subarray(config.packet.sizeOfHeader, header.size);
 
-    if (header.id === ePacketId.C2L_Init) {
-      console.log('클라 접속');
-      initialHandler(packet, socket, ePacketId.C2L_Init);
-    } else if (header.id === ePacketId.B2L_Init) {
-      console.log('배틀 서버 접속');
-      initialHandler(packet, socket, ePacketId.B2L_Init);
-    } else {
-      console.log('비정상적인 접속');
-      socket.destroy();
+    switch (header.id) {
+      case ePacketId.C2L_Init:
+        console.log('클라 접속');
+        initialHandler(packet, socket, ePacketId.C2L_Init);
+        break;
+      case ePacketId.B2L_Init:
+        console.log('배틀 서버 접속');
+        initialHandler(packet, socket, ePacketId.B2L_Init);
+        break;
+      default:
+        console.log('비정상적인 접속');
+        socket.destroy();
+        break;
     }
   });
 };

@@ -34,5 +34,6 @@ export const ePacketId = {
     B2C_Move: 103,
     B2L_Init: 121,
     B2L_CreateRoom: 122,
+    
   };
   

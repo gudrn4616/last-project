@@ -5,6 +5,8 @@ import { ePacketId } from "servercore/src/network/packetId.js";
  * 패킷 ID에 따른 핸들러 매핑
  */
 const handlerMappings = {
+  [ePacketId.C2L_CreateRoom]: (buffer, session) =>
+    roomManager.createRoomHandler(buffer, session),
   [ePacketId.C2L_EnterRoom]: (buffer, session) =>
     roomManager.enterRoomHandler(buffer, session),
 

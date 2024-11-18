@@ -33,7 +33,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-
 app.post('/register', async (req, res) => {
   const { email, password, nickname } = req.body;
   try {
