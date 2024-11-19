@@ -53,7 +53,7 @@ export class Room {
 
     const roomData = {
       id: this.id, // 방 ID
-      ownerId: user[0].id, // 방 소유자 ID
+      ownerId: this.users[0].getId(), // 방 소유자 ID
       name: this.getRoomName(), // 방 이름
       maxUserNum: this.maxPlayerCount, // 최대 유저 수
       state: this.state, // 방 상태
@@ -75,7 +75,7 @@ export class Room {
 
     newUser.send(JoinRoomResponseBuffer);
 
-    // 3. 새 유저 입장 알림 (본인 포함)
+    // 3. 새 유저 입장 알림 (본인 제외)
     const joinNotificationPacket = create(L2C_JoinRoomNotificationSchema, {
       joinUser: { id: newUser.getId(), name: newUser.getNickname() },
     });
@@ -87,8 +87,8 @@ export class Room {
       newUser.getNextSequence(),
     );
 
-    // 모든 유저에게 새 유저 입장 알림 전송
-    this.broadcast(joinNotificationBuffer);
+    // 모든 유저에게 새 유저 입장 알림 전송 (본인 제외)
+    this.broadcast(joinNotificationBuffer, newUser);
 
     return true; // 입장 성공
   }
@@ -127,10 +127,12 @@ export class Room {
   /**---------------------------------------------
     [broadcast]
 ---------------------------------------------*/
-  broadcast(buffer) {
-    for (const user of this.users) {
-      user.send(buffer);
-    }
+  broadcast(buffer, excludeUser = null) {
+    this.users.forEach(user => {
+      if (user !== excludeUser) {
+        user.send(buffer);
+      }
+    });
   }
 
   /**---------------------------------------------
