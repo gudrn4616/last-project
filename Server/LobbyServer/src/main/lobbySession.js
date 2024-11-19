@@ -1,5 +1,4 @@
-import { Session } from "ServerCore/src/network/session.js";
-
+import { Session } from 'servercore/src/network/session.js';
 
 export class LobbySession extends Session {
   constructor(socket) {
