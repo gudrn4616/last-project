@@ -4,9 +4,23 @@ import { Session } from 'ServerCore/src/network/session.js';
 import { CustomError } from 'ServerCore/src/utils/error/customError.js';
 import { ErrorCodes } from 'ServerCore/src/utils/error/errorCodes.js';
 import { PacketUtils } from 'ServerCore/src/utils/packetUtils.js';
-import { C2L_GameStartSchema, L2B_CreateGameRoomRequestSchema, C2L_JoinRoomRequestSchema, C2L_CreateRoomRequestSchema, C2L_LeaveRoomRequestSchema, C2L_GetRoomListRequestSchema, L2C_GetRoomListResponseSchema, L2C_CreateRoomResponseSchema, L2C_JoinRoomResponseSchema, L2C_LeaveRoomResponseSchema, L2C_LeaveRoomNotificationSchema, L2C_JoinRoomNotificationSchema, B2L_CreateGameRoomResponeSchema } from 'src/protocol/room_pb.js';
+import {
+  C2L_GameStartSchema,
+  L2B_CreateGameRoomRequestSchema,
+  C2L_JoinRoomRequestSchema,
+  C2L_CreateRoomRequestSchema,
+  C2L_LeaveRoomRequestSchema,
+  C2L_GetRoomListRequestSchema,
+  L2C_GetRoomListResponseSchema,
+  L2C_CreateRoomResponseSchema,
+  L2C_JoinRoomResponseSchema,
+  L2C_LeaveRoomResponseSchema,
+  L2C_LeaveRoomNotificationSchema,
+  L2C_JoinRoomNotificationSchema,
+  B2L_CreateGameRoomResponeSchema,
+} from 'src/protocol/room_pb.js';
 import { battleSessionManager } from 'src/server.js';
-
+import Room from './room.js';
 
 const MAX_ROOMS_SIZE = 10000;
 
@@ -23,19 +37,26 @@ class RoomManager {
     let tmpRoomId = this.availableRoomIds.shift() || 0;
 
     if (packet.maxUserNum > 4) {
-      throw new CustomError(ErrorCodes.CREATE_ROOM_FAILED, '방 인원수는 최대 4명 이상이어야 합니다.');
+      throw new CustomError(
+        ErrorCodes.CREATE_ROOM_FAILED,
+        '방 인원수는 최대 4명 이상이어야 합니다.',
+      );
     }
 
     const newRoom = new Room(tmpRoomId, packet.name, packet.maxUserNum);
     this.rooms.set(tmpRoomId, newRoom);
 
     // 응답 정보 생성
-    const responsePacket = create(L2C_CreateRoomResponseSchema, { isSuccess: true, room: newRoom, failCode: 0 });
+    const responsePacket = create(L2C_CreateRoomResponseSchema, {
+      isSuccess: true,
+      room: newRoom,
+      failCode: 0,
+    });
     const response = PacketUtils.SerializePacket(
       responsePacket,
-      ePacketId.S2CCreateRoomResponse,//수정할 부분
+      ePacketId.S2CCreateRoomResponse, //수정할 부분
       session.getId(),
-      session.getSequence()
+      session.getSequence(),
     );
     session.send(response);
   }
@@ -62,22 +83,28 @@ class RoomManager {
     }
 
     const success = room.enterRoom(session);
-    const responsePacket = create(L2C_JoinRoomResponseSchema, { isSuccess: success, room, failCode: 0 });
+    const responsePacket = create(L2C_JoinRoomResponseSchema, {
+      isSuccess: success,
+      room,
+      failCode: 0,
+    });
     // 유저에게 방 입장 성공 알림
     const response = PacketUtils.SerializePacket(
       responsePacket,
       L2C_JoinRoomResponseSchema,
       ePacketId.L2C_EnterRoomMe,
-      session.getNextSequence()
+      session.getNextSequence(),
     );
 
-    const otherResponsePacket = create(L2C_JoinRoomNotificationSchema, { joinUser: session.getNickname() });
+    const otherResponsePacket = create(L2C_JoinRoomNotificationSchema, {
+      joinUser: session.getNickname(),
+    });
 
     const otherResponse = PacketUtils.SerializePacket(
       otherResponsePacket,
       L2C_JoinRoomNotificationSchema,
       ePacketId.L2C_EnterRoomOther,
-      session.getNextSequence()
+      session.getNextSequence(),
     );
 
     room.broadcast(otherResponse);
@@ -107,16 +134,18 @@ class RoomManager {
         responsePacket,
         L2C_LeaveRoomResponseSchema,
         ePacketId.L2C_LeaveRoom,
-        session.getNextSequence()
+        session.getNextSequence(),
       );
 
       // 퇴장한 유저를 다른 유저에게 통지
-      const otherResponsePacket = create(L2C_LeaveRoomNotificationSchema, { userId: session.getId() });
+      const otherResponsePacket = create(L2C_LeaveRoomNotificationSchema, {
+        userId: session.getId(),
+      });
       const otherResponse = PacketUtils.SerializePacket(
         otherResponsePacket,
         L2C_LeaveRoomNotificationSchema,
         ePacketId.L2C_LeaveRoomOther,
-        session.getNextSequence()
+        session.getNextSequence(),
       );
       room.broadcast(otherResponse, session);
     }
@@ -142,7 +171,7 @@ class RoomManager {
         name: room.getName(),
         maxUserNum: room.getMaxUsersCount(),
         state: room.getState(),
-        users: room.getUsers().map(user => ({
+        users: room.getUsers().map((user) => ({
           id: user.getId(),
           nickname: user.getNickname(),
         })),
@@ -156,7 +185,7 @@ class RoomManager {
       responsePacket,
       L2C_GetRoomListResponseSchema,
       ePacketId.L2C_RoomList,
-      session.getNextSequence()
+      session.getNextSequence(),
     );
     session.send(response);
   }
@@ -237,7 +266,7 @@ class RoomManager {
       responsePacket,
       L2C_GameStartSchema,
       ePacketId.L2C_GameStart,
-      session.getNextSequence()
+      session.getNextSequence(),
     );
     this.rooms.get(Id).broadcast(response);
   }
